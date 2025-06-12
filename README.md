@@ -56,7 +56,6 @@
 | Django         | PythonのWebアプリケーションフレームワーク                                                               |
 | django-environ | Djangoで「環境変数」を使いやすく管理するためのライブラリ                                                |
 | django-axes    | Djangoに「ログイン試行の制限」機能を追加するライブラリ                                                  |
-| DRF            | Django REST Framework の略で、Django Webフレームワークで RESTful API を開発しやすくするためのライブラリ |
 | Bootstrap      | CSSフレームワーク                                                                                       |
 | Reportlab      | PythonでPDFファイルをプログラム的に生成できるライブラリ                                                 |
 | PyOTP          | ワンタイムパスワードの生成と検証を行うPythonライブラリ                                                  |
@@ -140,8 +139,6 @@
 ## 非機能要件
 
 ### a.拡張性
-
-- APIの利用により、利用情報を他のシステムから参照可能
 - PythonAnywhereのプラン変更
 
 ### b.稼働環境
