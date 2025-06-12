@@ -1,0 +1,69 @@
+<!-- ------------------------ -->
+<!-- 概要：貸出記録ダウンロードHTML -->
+<!-- ------------------------ -->
+{% extends 'base.html' %}
+{% load static %}
+{% block csslink %}
+
+{% endblock %}
+
+{% block title %}
+貸出記録ダウンロード
+{% endblock %}
+
+{% block content %}
+{% include 'partials/header.html' %}
+
+<main class="container py-4 overflow-x-auto" style="min-height: 80vh;">
+    <!-- パンくずリスト -->
+    <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'k_lend_app:record_list' %}">トップ</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'k_lend_app:record_list' %}">貸出記録管理</a></li>
+            <li class="breadcrumb-item active" aria-current="page">
+                貸出記録ダウンロード
+            </li>
+        </ol>
+    </nav>
+
+    <!-- カードボディ -->
+    <div class="card border-0">
+        <!-- タイトル -->
+        <h1 class="card-title fs-3 px-2 mt-2">
+            貸出記録ダウンロード
+        </h1>
+
+        <!-- ポストフォーム -->
+        <div class="card-body overflow-x-scroll">
+            <form method="post">
+                {% csrf_token %}
+                <div class="row">
+                    <!-- 記録日・開始日 -->
+                    <div class="col-12 col-sm-6 mb-2">
+                        <label for="record_date_from" class="form-label">開始日</label>
+                        <input type="date" name="record_date_from" id="record_date_from" class="form-control" value="{{ form_val_dict.record_date_from }}" required>
+                    </div>
+                    <!-- 記録日・終了日 -->
+                    <div class="col-12 col-sm-6 mb-2">
+                        <label for="record_date_to" class="form-label">終了日</label>
+                        <input type="date" name="record_date_to" id="record_date_to" class="form-control" value="{{ form_val_dict.record_date_to }}" required>
+                    </div>
+
+                    <!--  送信ボタン -->
+                    <div class="text-center my-4">
+                        <button type="submit" class="btn btn-secondary py-2 px-3"
+                            onclick="return confirm('貸出記録をダウンロードしますか？');">
+                            ダウンロード
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="card-body"></div>
+    </div>
+</main>
+
+{% include 'partials/footer.html' %}
+
+{% endblock %}

@@ -1,0 +1,13 @@
+.DS_Store
+.venv
+.env
+db.sqlite3
+__pycache__
+__pycache__/
+logs/*
+!logs/.gitkeep
+migrations
+migrations/*
+*.log
+*.pot
+*.pyc

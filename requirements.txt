@@ -1,0 +1,7 @@
+django
+django-environ
+django-axes
+reportlab
+pyotp
+qrcode
+Pillow

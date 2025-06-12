@@ -1,0 +1,72 @@
+<!-- ------------------------ -->
+<!-- 概要：サイトヘッダーHTML -->
+<!-- ------------------------ -->
+{% load static %}
+<header class="m-0 p-0 w-100">
+    <nav class="navbar bg-dark bg-gradient navbar-expand-md " data-bs-theme="dark">
+        <div class="container-fluid">
+            <a class="navbar-brand text-center align-middle" href="{% url 'k_lend_app:record_list' %}">
+                <img src="{% static 'img/base_icon.png' %}" alt="Logo" width="32" height="32"
+                    class="d-inline-block align-text-top img-fluid">
+                <span class=" text-center align-middle fs-5 mx-2">K-LEND</span>
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#HeaderNav"
+                aria-controls="HeaderNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="HeaderNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link"></a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            貸出記録管理
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{% url 'k_lend_app:record_list' %}">貸出記録一覧</a></li>
+                            <li><a class="dropdown-item" href="{% url 'k_lend_app:record_create' %}">貸出記録作成</a></li>
+                            <li><a class="dropdown-item" href="{% url 'k_lend_app:record_download' %}">ダウンロード</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            機材管理
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{% url 'k_lend_app:equipment_list' %}">機材一覧</a></li>
+                            <li><a class="dropdown-item" href="{% url 'k_lend_app:equipment_create' %}">機材作成</a></li>
+                            <li><a class="dropdown-item" href="{% url 'k_lend_app:equipment_download' %}">機材チェック</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            アカウント管理
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li class="py-1 px-2 text-center fw-bold">{{ request.user.last_name }} {{ request.user.first_name }}</li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li>
+                                <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#LogoutModal">
+                                    ログアウト
+                                </a>
+                            </li>
+                            <li><a class="dropdown-item" href="{% url 'k_lend_app:account_list' %}">アカウント一覧</a></li>
+                            <li><a class="dropdown-item" href="{% url 'k_lend_app:account_create' %}">アカウント作成</a></li> 
+                            <li><a class="dropdown-item" href="{% url 'k_lend_app:account_2fa' %}">二要素認証設定</a></li>
+                        </ul>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>

@@ -1,0 +1,35 @@
+.custom-animation-fade-out {
+    animation: CustomAnimationfadeOut 4s forwards;
+}
+
+.custom-animation-fade-out-2s {
+    animation: CustomAnimationfadeOut 2.5s forwards;
+}
+
+
+/* アニメーション定義 */
+@keyframes CustomAnimationfadeOut {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 1;
+        display: none;
+    }
+}
+
+.text-orange {
+  color: orange !important;  /* お好みのオレンジ色に変更可 */
+}
+
+/* custom.css に追加 */
+.btn-orange {
+  background-color: orange;
+  color: #fff;
+  border: none;
+}
+
+.btn-orange:hover {
+  background-color: rgb(233, 151, 0);
+  color: #fff;
+}

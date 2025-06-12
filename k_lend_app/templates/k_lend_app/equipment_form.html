@@ -1,0 +1,92 @@
+<!-- ------------------------ -->
+<!-- 概要：機材フォームHTML -->
+<!-- ------------------------ -->
+{% extends 'base.html' %}
+{% load static %}
+{% block csslink %}
+
+{% endblock %}
+
+{% block title %}
+機材{% if is_edit %}編集{% else %}作成{% endif %}
+{% endblock %}
+
+{% block content %}
+{% include 'partials/header.html' %}
+
+<main class="container py-4 overflow-x-auto" style="min-height: 80vh;">
+    <!-- パンくずリスト -->
+    <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'k_lend_app:record_list' %}">トップ</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'k_lend_app:equipment_list' %}">機材管理</a></li>
+            <li class="breadcrumb-item active" aria-current="page">
+                機材{% if is_edit %}編集{% else %}作成{% endif %}
+            </li>
+        </ol>
+    </nav>
+
+    <!-- カードボディ -->
+    <div class="card border-0">
+        <!-- タイトル -->
+        <h1 class="card-title fs-3 px-2 mt-2">
+            機材{% if is_edit %}編集{% else %}作成{% endif %}
+        </h1>
+
+        <!-- ポストフォーム -->
+        <div class="card-body overflow-x-scroll">
+            <form method="post">
+                {% csrf_token %}
+                <!-- フォームテーブル -->
+                <table class="table table-hover table-bordered">
+                    <tbody>
+                        <!-- 機材ID -->
+                        <tr>
+                            <th class="bg-light">機材ID</th>
+                            <td>
+                                <input type="text" name="equipment_id" class="form-control p-2" 
+                                    minlength="3" maxlength="32" 
+                                    value="{{ form_val_dict.equipment_id }}" placeholder="例）KINFC0001" required>
+                            </td>
+                        </tr>
+
+                        <!-- 機材名 -->
+                        <tr>
+                            <th class="bg-light">機材名</th>
+                            <td>
+                                <input type="text" name="equipment_name" class="form-control p-2" 
+                                    minlength="3" maxlength="48" 
+                                    value="{{ form_val_dict.equipment_name }}" placeholder="例）NFCリーダー001" required>
+                            </td>
+                        </tr>
+
+                        <!-- 備考 -->
+                        <tr>
+                            <th class="bg-light">備考</th>
+                            <td>
+                                <input type="text" name="remark_text" class="form-control p-2" 
+                                    minlength="1" maxlength="256" 
+                                    value="{{ form_val_dict.remark_text }}" placeholder="">
+                            </td>
+                        </tr>
+                        
+                    </tbody>
+                </table>
+
+                <!--  送信ボタン -->
+                <div class="text-center my-3 mt-4">
+                    <button type="submit" class="btn btn-secondary py-2 px-3" 
+                        onclick="return confirm('保存しますか？');">
+                        保存する
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div class="card-body"></div>
+    </div>
+</main>
+
+{% include 'partials/footer.html' %}
+
+{% endblock %}

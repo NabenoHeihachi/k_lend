@@ -1,0 +1,225 @@
+<!-- ------------------------ -->
+<!-- 概要：貸出記録一覧HTML -->
+<!-- ------------------------ -->
+{% extends 'base.html' %}
+{% load static %}
+{% block csslink %}
+
+{% endblock %}
+
+{% block title %}貸出記録一覧{% endblock %}
+
+{% block content %}
+{% include 'partials/header.html' %}
+
+<main class="container-fluid py-4 overflow-x-auto" style="min-height: 80vh;">
+    <!-- パンくずリスト -->
+    <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb" class="px-2">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'k_lend_app:record_list' %}">トップ</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'k_lend_app:record_list' %}">貸出記録管理</a></li>
+            <li class="breadcrumb-item active" aria-current="page">
+                貸出記録一覧
+            </li>
+        </ol>
+    </nav>
+
+    <div class="card border-0">
+        <!-- タイトル -->
+        <h1 class="card-title fs-3 px-2 mt-2">貸出記録一覧</h1>
+
+        <!-- 検索フォーム -->
+        <div class="card-body">
+            <form method="post" class="mb-4">
+                {% csrf_token %}
+                <h3 class="fs-5">一覧検索</h3>
+                <div class="row">
+                    <!-- 学生番号・氏名 -->
+                    <div class="col-12 col-sm-6 col-md-3 mb-2">
+                        <label for="search_name_or_id" class="form-label">学生番号／氏名</label>
+                        <input type="text" name="name_or_id" id="search_name_or_id" class="form-control"
+                            placeholder="学生番号または氏名" value="{{ search_val_dict.name_or_id }}">
+                    </div>
+                    <!-- ステータス -->
+                    <div class="col-12 col-sm-6 col-md-3 mb-2">
+                        <label for="search_is_return" class="form-label">ステータス</label>
+                        <select class="form-select" name="is_return" id="search_is_return">
+                            {% if search_val_dict.is_return == "1" %}
+                            <option value="">---</option>
+                            <option value="1" selected>貸出中</option>
+                            <option value="0">返却済</option>
+                            {% elif search_val_dict.is_return == "0" %}
+                            <option value="">---</option>
+                            <option value="1">貸出中</option>
+                            <option value="0" selected>返却済</option>
+                            {% else %}
+                            <option value="" selected>---</option>
+                            <option value="1">貸出中</option>
+                            <option value="0">返却済</option>
+                            {% endif %}
+                        </select>
+                    </div>
+                    
+                    <!-- 貸出機材 -->
+                    <div class="col-12 col-sm-12 col-md-6 mb-2">
+                        <label for="search_equipment_model_id" class="form-label">貸出機材</label>
+                        <select id="search_equipment_model_id" name="equipment_model_id" class="form-select">
+                            <option value="">
+                                ---
+                            </option>
+                            {% for equipment in equipment_list %}
+                                {% if search_val_dict.equipment_model_id|stringformat:"s" == equipment.id|stringformat:"s" %}
+                                <option value="{{ equipment.id }}" selected>
+                                    {% if not equipment.is_active %}
+                                    (貸出停止)
+                                    {% endif %}
+                                    {{ equipment.equipment_name }}（ID:{{ equipment.equipment_id }}）
+                                </option>
+                                {% else %}
+                                <option value="{{ equipment.id }}">
+                                    {% if not equipment.is_active %}
+                                    (貸出停止)
+                                    {% endif %}
+                                    {{ equipment.equipment_name }}（ID:{{ equipment.equipment_id }}）
+                                </option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <!--  送信ボタン -->
+                <div class="text-center my-3">
+                    <button type="submit" class="btn btn-secondary py-2 px-3" name="button_action" value="search">
+                        検索する
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- 一覧表示 -->
+        <div class="card-body">
+            <h3 class="fs-5">
+                記録一覧
+            </h3>
+            <div class="overflow-x-scroll py-0">
+                <table class="table table-bordered table-hover text-center py-0 my-0">
+                    <thead class="table-light text-nowrap">
+                        <tr>
+                            <th style="width: 100px;">貸出ID</th>
+                            <th>利用者</th>
+                            <th>貸出機材</th>
+                            <th style="width: 110px;">開始日時</th>
+                            <th style="width: 110px;">終了日時</th>
+                            <th>更新者</th>
+                            <th>アクション</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-group-divider">
+                        {% for record_object in record_objects %}
+                        <tr class="text-center align-middle text-nowrap">
+                            <td>
+                                {% if record_object.end_datetime %}
+                                <span class="badge bg-secondary">返却済</span>
+                                {% else %}
+                                <span class="badge bg-primary">貸出中</span>
+                                {% endif %}
+                                <span class="fw-bold mx-1">{{ record_object.loan_id }}</span>
+                            </td>
+                            <td class="overflow-x-scroll" style="max-width: 120px;">
+                                {{ record_object.borrower_id|default:"-" }}
+                                &nbsp;
+                                {{ record_object.borrower_name|default:"-" }}
+                            </td>
+                            <td class="overflow-x-scroll" style="max-width: 120px;">
+                                {{ record_object.equipment.equipment_name }}（{{ record_object.equipment.equipment_id }}）
+                            </td> 
+                            <td>{{ record_object.start_datetime|date:"Y年n月j日 H時i分" }}</td>
+                            <td>{{ record_object.end_datetime|date:"Y年n月j日 H時i分"|default:"-" }}</td>
+                            <td>
+                                {% if record_object.updated_by %}
+                                    {{ record_object.updated_by.last_name }}
+                                    {{ record_object.updated_by.first_name }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td class="text-nowrap" style="width: 200px;">
+                                <form method="post">
+                                    <a href="{% url 'k_lend_app:record_edit' record_object.loan_id %}"
+                                        class="btn btn-outline-primary text-nowrap mx-1 my-2 px-3">
+                                        編集
+                                    </a>
+                                    {% csrf_token %}
+                                    <input type="hidden" name="loan_id" value="{{ record_object.loan_id }}">
+                                    <button type="submit" class="btn btn-outline-danger text-nowrap mx-1 my-2 px-3"
+                                        name="button_action" value="delete"
+                                        onclick="return confirm('貸出ID「{{ record_object.loan_id }}」を削除しますか？')">
+                                        削除
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="13" class="text-start text-secondary">
+                                該当するデータはありません
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ページネーション -->
+        <div class="card-body">
+            <nav class="my-2">
+                <ul class="pagination justify-content-center">
+                    {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page=1">&lt;&lt;</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">&lt;</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <span class="page-link">&lt;&lt;</span>
+                        </li>
+                        <li class="page-item disabled">
+                            <span class="page-link">&lt;</span>
+                        </li>
+                    {% endif %}
+
+                    <li class="page-item active" aria-current="page">
+                        <span class="page-link">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+                    </li>
+
+                    {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.next_page_number }}">&gt;</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">&gt;&gt;</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <span class="page-link">&gt;</span>
+                        </li>
+                        <li class="page-item disabled">
+                            <span class="page-link">&gt;&gt;</span>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+
+        </div>
+
+        <div class="card-body"></div>
+    </div>
+</main>
+
+{% include 'partials/footer.html' %}
+
+{% endblock %}

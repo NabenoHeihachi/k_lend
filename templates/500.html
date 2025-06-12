@@ -1,0 +1,19 @@
+<!-- ------------------------ -->
+<!-- 概要：500HTML -->
+<!-- ------------------------ -->
+{% extends 'base.html' %}
+{% load static %}
+
+<!-- タイトル -->
+{% block title %}500エラー{% endblock %}
+
+{% block content %}
+<main style="min-height: 100vh; display: flex; align-items: center; justify-content: center;">
+    <div class="container text-center py-4 mb-4">
+        <h1 class="display-6 my-3">500 - サーバーエラー</h1>
+        <p class="lead">
+            サーバーで問題が発生しました。システム管理者に連絡してください。
+        </p>
+    </div>
+</main>
+{% endblock %}

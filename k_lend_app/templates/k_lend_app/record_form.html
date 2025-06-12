@@ -1,0 +1,139 @@
+<!-- ------------------------ -->
+<!-- 概要：貸出記録フォームHTML -->
+<!-- ------------------------ -->
+{% extends 'base.html' %}
+{% load static %}
+{% block csslink %}
+
+{% endblock %}
+
+{% block title %}
+貸出記録{% if is_edit %}編集{% else %}作成{% endif %}
+{% endblock %}
+
+{% block content %}
+{% include 'partials/header.html' %}
+
+<main class="container py-4 overflow-x-auto" style="min-height: 80vh;">
+    <!-- パンくずリスト -->
+    <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'k_lend_app:record_list' %}">トップ</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'k_lend_app:record_list' %}">貸出記録管理</a></li>
+            <li class="breadcrumb-item active" aria-current="page">
+                貸出記録{% if is_edit %}編集{% else %}作成{% endif %}
+            </li>
+        </ol>
+    </nav>
+
+    <!-- カードボディ -->
+    <div class="card border-0">
+        <!-- タイトル -->
+        <h1 class="card-title fs-3 px-2 mt-2">
+            貸出記録{% if is_edit %}編集{% else %}作成{% endif %}
+        </h1>
+
+        <!-- ポストフォーム -->
+        <div class="card-body overflow-x-scroll">
+            <form method="post">
+                {% csrf_token %}
+                <!-- フォームテーブル -->
+                <table class="table table-hover table-bordered">
+                    <tbody>
+                        <!-- 利用者ID -->
+                        <tr>
+                            <th class="bg-light" style="width: 150px;">利用者ID</th>
+                            <td>
+                                <input type="text" name="borrower_id" class="form-control p-2" 
+                                    minlength="4" maxlength="64" 
+                                    value="{{ form_val_dict.borrower_id }}" placeholder="例）20242024" required>
+                            </td>
+                        </tr>
+
+                        <!-- 利用者名 -->
+                        <tr>
+                            <th class="bg-light">利用者名</th>
+                            <td>
+                                <input type="text" name="borrower_name" class="form-control p-2" 
+                                    minlength="3" maxlength="32" 
+                                    value="{{ form_val_dict.borrower_name }}" placeholder="例）貸出太郎" required>
+                            </td>
+                        </tr>
+
+                        <!-- 機材 -->
+                        <tr>
+                            <th class="bg-light">機材</th>
+                            <td>
+                                <select name="equipment_model_id" class="form-select p-2" required>
+                                    <option disabled selected>
+                                        機材を選択してください
+                                    </option>
+                                    {% for equipment in equipment_list %}
+                                        {% if form_val_dict.equipment_model_id|stringformat:"s" == equipment.id|stringformat:"s" %}
+                                        <option value="{{ equipment.id }}" selected>
+                                            {% if not equipment.is_active %}
+                                            (貸出停止)
+                                            {% endif %}
+                                            {{ equipment.equipment_name }}（ID:{{ equipment.equipment_id }}）
+                                        </option>
+                                        {% else %}
+                                        <option value="{{ equipment.id }}">
+                                            {% if not equipment.is_active %}
+                                            (貸出停止)
+                                            {% endif %}
+                                            {{ equipment.equipment_name }}（ID:{{ equipment.equipment_id }}）
+                                        </option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select>
+                            </td>
+                        </tr>
+
+                        <!-- 貸出開始日時 -->
+                        <tr>
+                            <th class="bg-light">貸出開始日時</th>
+                            <td>
+                                <input type="datetime-local" name="start_datetime" class="form-control p-2" 
+                                    value="{{ form_val_dict.start_datetime }}" required>
+                            </td>
+                        </tr>
+
+                        <!-- 貸出終了日時 -->
+                        <tr>
+                            <th class="bg-light">貸出終了日時</th>
+                            <td>
+                                <input type="datetime-local" name="end_datetime" class="form-control p-2" 
+                                    value="{{ form_val_dict.end_datetime }}">
+                            </td>
+                        </tr>
+
+                        <!-- 備考 -->
+                        <tr>
+                            <th class="bg-light">備考</th>
+                            <td>
+                                <input type="text" name="remark_text" class="form-control p-2" 
+                                    minlength="1" maxlength="32" 
+                                    value="{{ form_val_dict.remark_text }}" placeholder="">
+                            </td>
+                        </tr>
+                        
+                    </tbody>
+                </table>
+
+                <!--  送信ボタン -->
+                <div class="text-center my-3 mt-4">
+                    <button type="submit" class="btn btn-secondary py-2 px-3" 
+                        onclick="return confirm('保存しますか？');">
+                        保存する
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div class="card-body"></div>
+    </div>
+</main>
+
+{% include 'partials/footer.html' %}
+
+{% endblock %}

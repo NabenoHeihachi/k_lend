@@ -1,0 +1,135 @@
+<!-- ------------------------ -->
+<!-- 概要：アカウント一覧HTML -->
+<!-- ------------------------ -->
+{% extends 'base.html' %}
+{% load static %}
+{% block csslink %}
+
+{% endblock %}
+
+{% block title %}アカウント一覧{% endblock %}
+
+{% block content %}
+{% include 'partials/header.html' %}
+
+<main class="container py-4 overflow-x-auto" style="min-height: 80vh;">
+    <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'k_lend_app:record_list' %}">トップ</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'k_lend_app:account_list' %}">アカウント管理</a></li>
+            <li class="breadcrumb-item active" aria-current="page">アカウント一覧</li>
+        </ol>
+    </nav>
+
+    <div class="card border-0">
+        <h1 class="card-title fs-3 px-2 mt-2">アカウント一覧</h1>
+
+        <div class="card-body">
+            <!-- 検索フォーム -->
+            <form method="post" class="mb-4">
+                {% csrf_token %}
+                <div class="row">
+                    <label for="search" class="mb-1 mx-1">検索</label>
+                    <div class="col-12 col-sm-8 col-md-9">
+                        <input type="text" name="search_form_val" id="search" class="form-control prevent-forms-submit-enter p-2"
+                            maxlength="32" placeholder="ID、氏名またはメールアドレスで検索" value="{{ search_form_val }}">
+                    </div>
+                    <div class="col-6 col-sm-4 col-md-3 d-grid mt-2 mt-sm-0 mx-auto mx-sm-0">
+                        <button type="submit" class="btn btn-dark text-nowrap"
+                            name="button_action" value="account_search">
+                            検索
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="card-body text-nowrap">
+            <div class="overflow-x-scroll py-0">
+                <table class="table table-bordered table-hover text-center mt-3 caption-top py-0 my-0">
+                    <caption>アカウント一覧</caption>
+                    <thead class="table-light">
+                        <tr>
+                            <th>ユーザーID</th>
+                            <th>氏名</th>
+                            <th>メールアドレス</th>
+                            <th>ユーザー権限</th>
+                            <th>2FA</th>
+                            <th>アクション</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-group-divider">
+                        {% for account in account_dataset %}
+                        <tr class="text-center align-middle">
+                            <td class="text-center align-middle">
+                                {{ account.username }}
+                                {% if request.user.username == account.username %}
+                                <span class="badge rounded-pill text-bg-primary">あなた</span>
+                                {% endif %}
+                                {% if not account.is_active %}
+                                <span class="badge rounded-pill text-bg-secondary">無効</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {{ account.last_name }} {{ account.first_name }}
+                                {% if account.is_superuser %}
+                                (Django管理者)
+                                {% endif %}
+                            </td>
+                            <td>{{ account.email|default:'登録なし' }}</td>
+                            <td>{{ account.type_code_display|default:'-' }}</td>
+                            <td class="text-nowrap fs-5">
+                                {% if not account.is_manageable %}
+                                    -
+                                {% elif account.is_2fa_enabled %}
+                                    <span class="badge bg-primary">有効</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">無効</span>
+                                {% endif %}
+                            </td>
+                            <td style="width: 200px;">
+                                <form method="post">
+                                    <a href="{% url 'k_lend_app:account_edit' account.id %}"
+                                        class="btn btn-outline-primary text-nowrap mx-1 my-2 px-3">
+                                        詳細
+                                    </a>
+                                    {% csrf_token %}
+                                    <input type="hidden" name="account_id" value="{{account.id}}">
+                                    
+                                    {% if account.is_active %}
+                                    <button type="submit" class="btn btn-outline-danger text-nowrap mx-1 my-2 px-3"
+                                        name="button_action" value="account_change_active"
+                                        onclick="return confirm('ユーザーアカウント「{{ account.username }}」を無効化しますか？');">
+                                        無効化
+                                    </button>
+                                    {% else %}
+                                    <button type="submit" class="btn btn-outline-secondary text-nowrap mx-1 my-2 px-3"
+                                        name="button_action" value="account_change_active"
+                                        onclick="return confirm('ユーザーアカウント「{{ account.username }}」を有効化しますか？');">
+                                        有効化
+                                    </button>
+                                    {% endif %}
+                                </form>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td class="text-start" colspan="5">
+                                <span class="px-2 text-secondary">
+                                    アカウントがありません
+                                </span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card-body"></div>
+    </div>
+</main>
+
+{% include 'partials/footer.html' %}
+
+{% endblock %}

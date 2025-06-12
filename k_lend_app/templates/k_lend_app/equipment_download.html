@@ -1,0 +1,107 @@
+<!-- ------------------------ -->
+<!-- 概要：機材チェックHTML -->
+<!-- ------------------------ -->
+{% extends 'base.html' %}
+{% load static %}
+{% block csslink %}
+
+{% endblock %}
+
+{% block title %}
+機材チェック
+{% endblock %}
+
+{% block content %}
+{% include 'partials/header.html' %}
+
+<main class="container py-4 overflow-x-auto" style="min-height: 80vh;">
+    <!-- パンくずリスト -->
+    <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'k_lend_app:record_list' %}">トップ</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'k_lend_app:equipment_list' %}">機材管理</a></li>
+            <li class="breadcrumb-item active" aria-current="page">
+                機材チェック
+            </li>
+        </ol>
+    </nav>
+
+    <!-- カードボディ -->
+    <div class="card border-0">
+        <!-- タイトル -->
+        <h1 class="card-title fs-3 px-2 mt-2">
+            機材チェック
+        </h1>
+
+        <!-- ポストフォーム -->
+        <div class="card-body overflow-x-scroll">
+            <form method="post">
+                {% csrf_token %}
+                <!-- フォームテーブル -->
+                <table class="table table-bordered table-hover text-center py-0 my-0">
+                    <thead class="table-light text-nowrap">
+                        <tr>
+                            <th style="width: 86px;">確認</th>
+                            <th>機材</th>
+                            <th>記録の状態</th>
+                            <th>現在の状態</th>
+                            <th>備考</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-group-divider">
+                        {% for equipment_object in equipment_objects %}
+                        <tr class="text-center align-middle text-nowrap">
+                            <td>
+                                <input type="checkbox" name="check_list" class="form-check-input" 
+                                    value="{{ equipment_object.id }}"  style="transform: scale(1.4);min-width: 18px" required>
+                            </td>
+                            <td class="overflow-x-scroll" style="max-width: 130px;">
+                                {{ equipment_object.equipment_name }}（{{ equipment_object.equipment_id }}）
+                            </td>
+                            <td>
+                                {% if equipment_object.is_lent %}
+                                <span class="text-danger fw-bold">貸出中</span>
+                                {% else %}
+                                <span class="text-secondary fw-bold">返却済</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <select class="form-select p-2" name="check_status_{{ equipment_object.id }}" required>
+                                    <option value="" disabled selected>選択してください</option>
+                                    {% for key,val in check_status.items %}
+                                        <option value="{{ key }}">{{ val }}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                            <td>
+                                <input type="text" name="remark_text_{{ equipment_object.id }}" class="form-control p-2" 
+                                    minlength="1" maxlength="32" value="">
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" class="text-start text-secondary">
+                                該当するデータはありません
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+                <!--  送信ボタン -->
+                <div class="text-center my-3 mt-4">
+                    <button type="submit" class="btn btn-secondary py-2 px-3" 
+                        onclick="return confirm('PDF出力しますか？');">
+                        PDF出力
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div class="card-body"></div>
+    </div>
+</main>
+
+{% include 'partials/footer.html' %}
+
+{% endblock %}

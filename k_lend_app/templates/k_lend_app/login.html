@@ -1,0 +1,67 @@
+<!-- -------------------- -->
+<!-- ログイン画面テンプレート -->
+<!-- -------------------- -->
+
+<!-- ベースHTML読み込み -->
+{% extends 'base.html' %}
+<!-- static読み込み -->
+{% load static %}
+<!-- タイトル -->
+{% block title %}ログイン{% endblock %}
+<!-- body中身 -->
+{% block content %}
+<!-- メインタグ -->
+<main class="bg-light bg-gradient overflow-x-scroll overflow-y-scroll" style="height: 100vh;min-height: 510px;">
+    <div class="container d-flex align-items-center justify-content-center align-self-center px-4 h-100">
+        <!-- ログインボックス -->
+        <div class="card w-100 border border-2" style="max-width: 600px;min-width: 250px;height: fit-content;min-height: 500px;">
+            <div class="card-body overflow-auto px-4">
+                <!-- タイトルグループ -->
+                <div class="d-flex align-items-center justify-content-center mb-3 text-decoration-none my-3">
+                    <!-- タイトルアイコン -->
+                    <div class="">
+                        <img class="p-0 m-0 img-fluid" src="{% static 'img/base_logo.png' %}" width="64" height="64" alt="Base Logo">
+                    </div>
+                    <!-- タイトルテキスト -->
+                </div>
+
+                <!-- ログインフォーム -->
+                <form method="post" class="prevent-double-click-form">
+                    <!-- 認証トークン -->
+                    {% csrf_token %}
+
+                    <!-- 注釈 -->
+                    <h5 class="card-subtitle my-2 text-muted {{ id_password_term_form_display }}">ユーザーIDとパスワードを入力してください</h5>
+                    <h5 class="card-subtitle my-2 text-muted {{ one_time_password_form_display }}">認証アプリで生成されたワンタイムパスワードを入力してください</h5>
+
+                    <!-- ユーザーIDフォーム -->
+                    <div class="my-4">
+                        <label for="bf_user_id" class="form-label pl">ユーザーID</label>
+                        <input type="text" class="form-control prevent-forms-submit-enter" id="bf_user_id" value="{{ user_id }}"
+                            name="bf_user_id" placeholder="ユーザーID" minlength="4" maxlength="128" {% if is_id_password_auth %}readonly{% endif %} required>
+                    </div>
+
+                    <!-- パスワードフォーム -->
+                    <div class="my-4 {{ id_password_term_form_display }}">
+                        <label for="bf_password" class="form-label">パスワード</label>
+                        <input type="password" class="form-control prevent-forms-submit-enter" id="bf_password" value="{{ user_password }}"
+                            name="bf_password" placeholder="パスワード" minlength="4" maxlength="128" required>
+                    </div>
+
+                    <!-- ワンタイムパスワード -->
+                    <div class="my-4 {{ one_time_password_form_display }}">
+                        <label for="bf_one_time_password" class="form-label">ワンタイムパスワード</label>
+                        <input type="text" class="form-control prevent-forms-submit-enter" id="bf_one_time_password"
+                            name="bf_one_time_password" placeholder="ワンタイムパスワード" minlength="4" maxlength="12">
+                    </div>
+
+                    <!-- ログインボタン -->
+                    <div class="text-center my-3 mt-4">
+                        <button type="submit" class="btn btn-dark btn-lg px-4 prevent-double-click-button mt-2">ログイン</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}

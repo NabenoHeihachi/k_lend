@@ -1,0 +1,19 @@
+<!-- ------------------------ -->
+<!-- 概要：404HTML -->
+<!-- ------------------------ -->
+{% extends 'base.html' %}
+{% load static %}
+
+<!-- タイトル -->
+{% block title %}404エラー{% endblock %}
+
+{% block content %}
+<main style="min-height: 100vh; display: flex; align-items: center; justify-content: center;">
+    <div class="container text-center py-4 mb-4">
+        <h1 class="display-6 my-3">404 - ページが見つかりません</h1>
+        <p class="lead">
+            お探しのページが見つかりませんでした。
+        </p>
+    </div>
+</main>
+{% endblock %}

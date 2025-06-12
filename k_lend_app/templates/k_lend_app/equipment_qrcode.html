@@ -1,0 +1,84 @@
+<!-- ------------------------ -->
+<!-- 概要：機材QRコードHTML -->
+<!-- ------------------------ -->
+{% extends 'base.html' %}
+{% load static %}
+{% block csslink %}
+
+{% endblock %}
+
+{% block title %}
+機材管理QRコード
+{% endblock %}
+
+{% block content %}
+{% include 'partials/header.html' %}
+
+<main class="container py-4 overflow-x-auto" style="min-height: 80vh;">
+    <!-- パンくずリスト -->
+    <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'k_lend_app:record_list' %}">トップ</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'k_lend_app:equipment_list' %}">機材管理</a></li>
+            <li class="breadcrumb-item active" aria-current="page">
+                機材管理QRコード
+            </li>
+        </ol>
+    </nav>
+
+    <!-- カードボディ -->
+    <div class="card border-0">
+        <!-- タイトル -->
+        <h1 class="card-title fs-3 px-2 mt-2">
+            機材管理QRコード
+        </h1>
+
+        <!-- ポストフォーム -->
+        <div class="card-body overflow-x-scroll">
+            <table class="table table-hover table-bordered">
+                <tbody>
+                    <!-- 機材ID -->
+                    <tr>
+                        <th class="bg-light" style="width: 150px;">機材ID</th>
+                        <td>{{ equipment_object.equipment_id }}</td>
+                    </tr>
+
+                    <!-- 機材名 -->
+                    <tr>
+                        <th class="bg-light" style="width: 150px;">機材名</th>
+                        <td>{{ equipment_object.equipment_name }}</td>
+                    </tr>
+
+                    <!-- 管理用QRコード -->
+                    <tr>
+                        <th class="bg-light" style="width: 150px;">管理用QRコード</th>
+                        <td>
+                            <div class="text-start my-2 overflow-x-auto">
+                                <img src="data:image/png;base64, {{ management_qrcode_base64_str | safe }}"  
+                                    class="img-fluid img-thumbnail" alt="管理用QRコード" style="max-width: 200px;">
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- 記録用QRコード -->
+                    <tr>
+                        <th class="bg-light" style="width: 150px;">記録用QRコード</th>
+                        <td>
+                            <div class="text-start my-2 overflow-x-auto">
+                                <img src="data:image/png;base64, {{ recordkeeping_qrcode_base64_str | safe }}"  
+                                    class="img-fluid img-thumbnail" alt="記録用QRコード" style="max-width: 200px;">
+                            </div>
+                        </td>
+                    </tr>
+                    
+                </tbody>
+            </table>
+        </div>
+
+        <div class="card-body"></div>
+    </div>
+</main>
+
+{% include 'partials/footer.html' %}
+
+{% endblock %}

@@ -1,0 +1,32 @@
+<!-- ------------------------ -->
+<!-- 概要：BACEテンプレートHTML -->
+<!-- ------------------------ -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'css/common.css' %}">
+    <link rel="stylesheet" href="{% static 'css/overwrite.css' %}">
+    <link rel="icon" href="{% static 'img/base_icon.png' %}" id="favicon">
+    <link rel="apple-touch-icon" href="{% static 'img/base_icon.png' %}">
+    {% block css_js_path %}{% endblock %} 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="K-LEND">
+    <meta name="robots" content="noindex" />
+    <title>{% block title %}{% endblock %} - K-LEND</title>
+</head>
+
+<body class="m-0 p-0 w-100 overflow-auto">
+    {% include 'partials/alerts.html' %}
+    {% block content %}
+    <p>※コンテンツがありません。</p>
+    {% endblock %}
+    <script src="{% static 'js/bootstrap.bundle.js' %}"></script>
+    <script src="{% static 'js/common_custom.js' %}"></script>
+</body>
+
+</html>

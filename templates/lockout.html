@@ -1,0 +1,19 @@
+<!-- ------------------------ -->
+<!-- 概要：アカウント凍結HTML -->
+<!-- ------------------------ -->
+{% extends 'base.html' %}
+{% load static %}
+
+<!-- タイトル -->
+{% block title %}アカウントロックエラー{% endblock %}
+
+{% block content %}
+<main style="min-height: 100vh; display: flex; align-items: center; justify-content: center;">
+    <div class="container text-center py-4 mb-4">
+        <h1 class="display-6 my-3">このアカウントはロックされています</h1>
+        <p class="lead">
+            ログインの試行回数が制限を超えました。時間を置いて、再度ログインをお試しください。
+        </p>
+    </div>
+</main>
+{% endblock %}

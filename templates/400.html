@@ -1,0 +1,19 @@
+<!-- ------------------------ -->
+<!-- 概要：400HTML -->
+<!-- ------------------------ -->
+{% extends 'base.html' %}
+{% load static %}
+
+<!-- タイトル -->
+{% block title %}400エラー{% endblock %}
+
+{% block content %}
+<main style="min-height: 100vh; display: flex; align-items: center; justify-content: center;">
+    <div class="container text-center py-4 mb-4">
+        <h1 class="display-6 my-3">400 - 不正なリクエスト</h1>
+        <p class="lead">
+            リクエストが正しくありません。再度お試しください。
+        </p>
+    </div>
+</main>
+{% endblock %}

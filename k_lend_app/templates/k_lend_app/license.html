@@ -1,0 +1,88 @@
+<!-- ------------------------ -->
+<!-- 概要：ライセンス表示HTML -->
+<!-- ------------------------ -->
+{% extends 'base.html' %}
+{% load static %}
+{% block csslink %}
+{% endblock %}
+
+{% block title %}ライセンス{% endblock %}
+
+{% block content %}
+{% include 'partials/header.html' %}
+<main style="min-height: 70vh;">
+    <div class="container my-3 pt-3">
+        <!-- パンくずリスト -->
+        <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb" class="px-2">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'k_lend_app:record_list' %}">トップ</a></li>
+                <li class="breadcrumb-item active" aria-current="page">
+                    ライセンス
+                </li>
+            </ol>
+        </nav>
+
+        <div class="card border-0">
+            <!-- タイトルエリア -->
+            <div class="card-body">
+                <h1 class="card-title">ライセンス</h1>
+                <p class="card-text">当プログラムは、以下のライセンスで配布されているサードパーティのライブラリやその他のリソースを使用しています。</p>
+            </div>
+
+            <hr>
+
+            <!-- ライセンスエリア -->
+            <div class="card-body">
+
+                <h3 class="card-title">Bootstrap</h3>
+                <!-- URLエリア -->
+                <p class="card-text px-1">
+                    <span class="fw-bold text-secondary">URL: </span>
+                    <a class="link-secondary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"
+                        href="https://getbootstrap.jp/">
+                        https://getbootstrap.jp/
+                    </a>
+                </p>
+                <!-- URLエリア -->
+                <p class="card-text px-1">
+                    <span class="fw-bold text-secondary">URL: </span>
+                    <a class="link-secondary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"
+                        href="https://github.com/twbs/bootstrap/tree/v5.3.0">
+                        https://github.com/twbs/bootstrap/tree/v5.3.0
+                    </a>
+                </p>
+                <p class="card-text overflow-x-scroll">
+                <pre class="bg-light p-2 border-start">
+The MIT License (MIT)
+
+Copyright (c) 2011-2023 The Bootstrap Authors
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+                    </pre>
+                </p>
+            </div>
+
+            <div class="my-4 py-4"></div>
+        </div>
+    </div>
+</main>
+
+{% include 'partials/footer.html' %}
+
+{% endblock %}

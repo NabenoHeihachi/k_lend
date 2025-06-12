@@ -1,0 +1,186 @@
+<!-- ------------------------ -->
+<!-- 概要：アカウントフォームHTML -->
+<!-- ------------------------ -->
+{% extends 'base.html' %}
+{% load static %}
+{% block csslink %}
+
+{% endblock %}
+
+{% block title %}
+{% if account %}
+アカウント詳細
+{% else %}
+アカウント新規作成
+{% endif %}
+{% endblock %}
+
+{% block content %}
+{% include 'partials/header.html' %}
+
+<main class="container py-4" style="min-height: 80vh;">
+    <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'k_lend_app:record_list' %}">トップ</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'k_lend_app:account_list' %}">アカウント管理</a></li>
+            <li class="breadcrumb-item active" aria-current="page">
+                {% if is_show_detail %}
+                アカウント詳細
+                {% else %}
+                アカウント新規作成
+                {% endif %}
+            </li>
+        </ol>
+    </nav>
+
+    <div class="card border-0">
+        <h1 class="card-title fs-3 px-2 mt-2">
+            {% if is_show_detail %}
+            アカウント詳細
+            {% else %}
+            アカウント新規作成
+            {% endif %}
+        </h1>
+
+        <div class="card-body overflow-x-scroll">
+            <div class="card-title fs-5">基本情報</div>
+            <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="is_show_detail" value="{{ is_show_detail }}">
+                <table class="table table-hover table-bordered">
+                    <tbody>
+                        <tr>
+                            <th class="bg-light">ユーザーID（必須）</th>
+                            <td>
+                                <input type="text" name="username" id="username" class="form-control p-2" minlength="8"
+                                    maxlength="32" value="{{ account.username }}" placeholder="例）00000000" required>
+                                <span class="text-secondary">半角英数字８〜３２文字</span>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th class="bg-light">権限タイプ（必須）</th>
+                            <td>
+                                <div class="row">
+                                    <div class="col-12 col-sm-8 col-md-6">
+                                        <select class="form-select form-select p-2" name="type_code" id="type_code" required>
+                                            <option disabled selected>選択してください</option>
+                                            {% for type_code_name, type_code in account_type_code_dict.items %}
+                                                {% if account.type_code == type_code %}
+                                                    <option value="{{ type_code }}" selected>{{ type_code_name }}</option>
+                                                {% else %}
+                                                    <option value="{{ type_code }}">{{ type_code_name }}</option>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th class="bg-light">氏名（必須）</th>
+                            <td>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <input type="text" name="last_name" id="last_name" class="form-control p-2"
+                                            minlength="1" maxlength="64" value="{{ account.last_name }}"
+                                            placeholder="苗字" required>
+                                    </div>
+                                    <div class="col-6">
+                                        <input type="text" name="first_name" id="first_name" class="form-control p-2"
+                                            minlength="1" maxlength="64" value="{{ account.first_name }}"
+                                            placeholder="名前" required>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th class="bg-light">Eメール</th>
+                            <td><input type="text" name="email" id="email" class="form-control p-2" minlength="2"
+                                    maxlength="256" value="{{ account.email|default:'' }}" placeholder="example@example.co.jp">
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th class="bg-light">パスワード（必須）</th>
+                            <td>
+                                {% if is_show_detail %}
+                                <div class="mb-2">
+                                    <input type="password" name="password" id="password" class="form-control p-2"
+                                        minlength="8" maxlength="64" placeholder="パスワード">
+                                </div>
+                                <div>
+                                    <input type="password" name="confirm" id="confirm" class="form-control p-2"
+                                        minlength="8" maxlength="64" placeholder="確認用パスワード">
+                                </div>
+                                {% else %}
+                                <div class="mb-2">
+                                    <input type="password" name="password"  class="form-control p-2"
+                                        minlength="8" maxlength="64" placeholder="パスワード" required>
+                                </div>
+                                <div>
+                                    <input type="password" name="confirm" class="form-control p-2"
+                                        minlength="8" maxlength="64" placeholder="確認用パスワード" required>
+                                </div>
+                                {% endif %}
+                                
+                                <span class="text-secondary">半角英数字８〜６４文字  指定記号必須「!, ?, (, ), @」</span>
+                            </td>
+                        </tr>
+
+                        {% if is_show_detail %}
+                        <tr>
+                            <th class="bg-light">最終ログイン時刻</th>
+                            <td>
+                                {% if account.last_login %}
+                                {{ account.last_login|date:"Y年n月j日 H時i分s秒" }}
+                                {% else %}
+                                -
+                                {% endif %}
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th class="bg-light">更新</th>
+                            <td>
+                                <p>
+                                    更新者ID：
+                                    {% if account.updated_by %}
+                                    {{ account.updated_by }}
+                                    {% else %}
+                                    -
+                                    {% endif %}
+                                </p>
+                                <p>
+                                    更新時刻：
+                                    {{ account.updated_at|date:"Y年n月j日 H時i分s秒" }}
+                                </p>
+                            </td>
+                        </tr>
+
+                        {% endif %}
+                    </tbody>
+                </table>
+
+                <!--  送信ボタン -->
+                <div class="text-center my-3 mt-4">
+                    {% if is_show_detail %}
+                    <button type="submit" class="btn btn-secondary py-2 px-3" onclick="return window.confirm('更新しますか？');">
+                        更新する
+                    </button>
+                    {% else %}
+                    <button type="submit" class="btn btn-secondary py-2 px-3" onclick="return window.confirm('新規作成しますか？');">
+                        作成する
+                    </button>
+                    {% endif %}
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+
+{% include 'partials/footer.html' %}
+
+{% endblock %}

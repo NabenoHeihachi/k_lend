@@ -1,0 +1,19 @@
+<!-- ------------------------ -->
+<!-- 概要：403HTML -->
+<!-- ------------------------ -->
+{% extends 'base.html' %}
+{% load static %}
+
+<!-- タイトル -->
+{% block title %}403エラー{% endblock %}
+
+{% block content %}
+<main style="min-height: 100vh; display: flex; align-items: center; justify-content: center;">
+    <div class="container text-center py-4 mb-4">
+        <h1 class="display-6 my-3">403 - アクセスが拒否されました</h1>
+        <p class="lead">
+            アクセスする権限がありません。
+        </p>
+    </div>
+</main>
+{% endblock %}
