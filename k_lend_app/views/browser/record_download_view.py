@@ -16,6 +16,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from k_lend_app.common.validation_function import FormValidationFuncs
 # データベース関連
 from k_lend_app.models.loan_record_model import LoanRecordModel
+# SQL関連
+from django.db.models import Q
 # PDF関連
 import io
 import math
@@ -140,14 +142,6 @@ class RecordDownloadView(LoginRequiredMixin, TemplateView):
                 is_validate_correct = False
                 # メッセージ表示
                 messages.error(request, COMMON_MESSAGE_DICT["VALIDATION"]["INVALID_DATE_TIME_ORDER"].format("開始日", "終了日"))
-            # *** 貸出中の貸出記録が存在しないかチェック ***
-            if is_validate_correct and LoanRecordModel.objects.filter(
-                    end_datetime__isnull=True,
-                    ).exists():
-                    # バリデーションフラグ更新
-                    is_validate_correct = False
-                    # メッセージ表示
-                    messages.error(request, COMMON_MESSAGE_DICT["BROWSER"]["MISSING_LOAN_RECORD"])
             # -------------------
             # PDF生成
             # -------------------
@@ -198,8 +192,17 @@ class RecordDownloadView(LoginRequiredMixin, TemplateView):
 
                 # 貸出記録を取得
                 record_objects = LoanRecordModel.objects.filter(
-                    start_datetime__gte=record_date_from,
-                    end_datetime__lte=record_date_to,
+                    (
+                        Q(start_datetime__gte=record_date_from) 
+                        &
+                        Q(start_datetime__lte=record_date_to)
+                    ) 
+                    |
+                    (
+                        Q(end_datetime__gte=record_date_from) 
+                        &
+                        Q(end_datetime__lte=record_date_to)
+                    )
                 ).order_by('-loan_id')
 
                 # データをリストに変換
@@ -262,7 +265,10 @@ class RecordDownloadView(LoginRequiredMixin, TemplateView):
                             # 貸出開始日時	
                             start_datetime = localtime(record_list[total_index_num].start_datetime).strftime("%Y年%m月%d日 %H時%M分")
                             # 貸出終了日時
-                            end_datetime = localtime(record_list[total_index_num].end_datetime).strftime("%Y年%m月%d日 %H時%M分")
+                            end_datetime = "未返却"
+                            if record_list[total_index_num].end_datetime:
+                                # 貸出終了日時がある場合
+                                end_datetime = localtime(record_list[total_index_num].end_datetime).strftime("%Y年%m月%d日 %H時%M分")
                             # 備考
                             remarks = record_list[total_index_num].remark_text
                             
