@@ -100,16 +100,6 @@ class RecordDownloadView(LoginRequiredMixin, TemplateView):
             record_objects = []
 
             # -------------------
-            # 権限チェック
-            # -------------------
-            # 管理者権限以外の場合
-            if request.user.type_code != COMMON_ACCOUNT_TYPE_CODE["システム管理用"]:
-                # 新規作成の場合
-                messages.error(request, COMMON_MESSAGE_DICT["BROWSER"]["NOT_AUTHORIZED"])
-                # リダイレクト
-                return redirect('k_lend_app:record_list')
-
-            # -------------------
             # フォーム値取得
             # -------------------
             for form_name in FORM_NAME_LIST:
