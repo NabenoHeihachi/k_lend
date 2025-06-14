@@ -24,6 +24,7 @@ logger = logging.getLogger(__name__)
 ログインクラス
 """
 class LoginView(TemplateView):
+    CLASS_NAME = "ログインクラス（認証）"
 
     # テンプレート
     template_name = "k_lend_app/login.html"
@@ -32,7 +33,6 @@ class LoginView(TemplateView):
         """
         コンストラクタ
         """
-        self.CLASS_NAME = "ログインクラス（認証）"
         # 共通パラメータ
         self.param = {
             "form_error" : False,
@@ -203,12 +203,12 @@ class LoginView(TemplateView):
 ログアウトクラス
 """
 class LogoutView(LoginRequiredMixin, TemplateView):
+    CLASS_NAME = "ログアウトクラス（認証）"
 
     def __init__(self):
         """
         コンストラクタ
         """
-        self.CLASS_NAME = "ログアウトクラス（認証）"
         # 共通パラメータ
         self.param = {
             "form_error" : False,

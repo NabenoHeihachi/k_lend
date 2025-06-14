@@ -24,6 +24,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 class AccountFormView(LoginRequiredMixin, TemplateView):
+    CLASS_NAME = "アカウントフォームクラス（管理用）"
 
     # テンプレートファイル
     template_name = 'k_lend_app/account_form.html'
@@ -32,7 +33,6 @@ class AccountFormView(LoginRequiredMixin, TemplateView):
         """
         コンストラクタ
         """
-        self.CLASS_NAME = "アカウントフォームクラス（管理用）"
         self.param = {
             "account": None,  # アカウントデータ
             "is_show_detail": False,  # 編集画面フラグ
@@ -47,7 +47,7 @@ class AccountFormView(LoginRequiredMixin, TemplateView):
         # 例外処理:START
         # ================
         # アクセス権限チェック
-        restrict_page_access_by_type_code(request, "職員")
+        restrict_page_access_by_type_code(request, "システム管理")
         try:
             # ログ出力
             logger.info(COMMON_MESSAGE_DICT["LOG"]["VIEW_GET"].format(self.CLASS_NAME))
@@ -96,7 +96,7 @@ class AccountFormView(LoginRequiredMixin, TemplateView):
         # 例外処理:START
         # ================
         # アクセス権限チェック
-        restrict_page_access_by_type_code(request, "職員")
+        restrict_page_access_by_type_code(request, "システム管理")
         try:
             # ログ出力
             logger.info(COMMON_MESSAGE_DICT["LOG"]["VIEW_POST"].format(self.CLASS_NAME))

@@ -31,6 +31,7 @@ logger = logging.getLogger(__name__)
 
 
 class EquipmentDownloadView(LoginRequiredMixin, TemplateView):
+    CLASS_NAME = "機材確認結果ダウンロードクラス（管理用）"
 
     # テンプレート
     template_name='k_lend_app/equipment_download.html'
@@ -39,7 +40,6 @@ class EquipmentDownloadView(LoginRequiredMixin, TemplateView):
         """
         コンストラクタ
         """
-        self.CLASS_NAME = "機材確認結果ダウンロードクラス（管理用）"
         self.CHECK_STATUS = {
             "0": "保管中（利用可）",
             "1": "保管中（利用不可）",

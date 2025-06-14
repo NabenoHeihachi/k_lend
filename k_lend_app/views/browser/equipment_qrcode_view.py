@@ -25,6 +25,7 @@ logger = logging.getLogger(__name__)
 
 
 class EquipmentQRCodeView(LoginRequiredMixin, TemplateView):
+    CLASS_NAME = "機材QRコード表示クラス（管理用）"
 
     # テンプレート
     template_name='k_lend_app/equipment_qrcode.html'
@@ -33,7 +34,6 @@ class EquipmentQRCodeView(LoginRequiredMixin, TemplateView):
         """
         コンストラクタ
         """
-        self.CLASS_NAME = "機材QRコード表示クラス（管理用）"
         # 共通パラメータ
         self.param = {
             "management_qrcode_base64_str": None,  # 管理用QRコード画像

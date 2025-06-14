@@ -14,7 +14,7 @@ from k_lend_app.views.browser.equipment_download_view import EquipmentDownloadVi
 from k_lend_app.views.browser.equipment_qrcode_view import EquipmentQRCodeView
 # アカウント関連
 from k_lend_app.views.browser.account_list_view import AccountListView
-from k_lend_app.views.browser.account_2fa_view import Account2FASettingView
+from k_lend_app.views.browser.account_setting_view import AccountSettingView
 from k_lend_app.views.browser.account_form_view import AccountFormView
 # ドキュメント関連
 from k_lend_app.views.browser.documents_view import DocumentView
@@ -38,10 +38,10 @@ urlpatterns = [
     path('equipment/<int:model_id>/qrcode/', EquipmentQRCodeView.as_view(), name='equipment_qrcode'),
 
     # アカウント管理関連
-    path('account/', AccountListView.as_view(), name='account_list'),
+    path('account/', AccountSettingView.as_view(), name='account_setting'),
+    path('account/list/', AccountListView.as_view(), name='account_list'),
     path('account/create/', AccountFormView.as_view(), name='account_create'),
     path('account/<int:account_id>/edit/', AccountFormView.as_view(), name='account_edit'),
-    path('account/2fa-setting/', Account2FASettingView.as_view(), name='account_2fa'),
     
     # ドキュメント関連
     path('document/<str:document_type>/', DocumentView.as_view(), name='document'),

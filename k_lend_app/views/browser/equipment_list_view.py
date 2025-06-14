@@ -21,6 +21,7 @@ logger = logging.getLogger(__name__)
 
 
 class EquipmentListView(LoginRequiredMixin, TemplateView):
+    CLASS_NAME = "機材一覧クラス（管理用）"
 
     # テンプレート
     template_name='k_lend_app/equipment_list.html'
@@ -29,7 +30,6 @@ class EquipmentListView(LoginRequiredMixin, TemplateView):
         """
         コンストラクタ
         """
-        self.CLASS_NAME = "機材一覧クラス（管理用）"
         # 共通パラメータ
         self.param = {
             "equipment_objects": [],  # 機材データ一覧
