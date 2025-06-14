@@ -1,0 +1,178 @@
+<!-- ------------------------ -->
+<!-- 概要：アカウント設定HTML -->
+<!-- ------------------------ -->
+{% extends 'base.html' %}
+{% load static %}
+{% block csslink %}
+
+{% endblock %}
+
+{% block title %}
+アカウント設定
+{% endblock %}
+
+{% block content %}
+{% include 'partials/header.html' %}
+
+<main class="container py-4" style="min-height: 80vh;">
+    <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'k_lend_app:record_list' %}">トップ</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'k_lend_app:account_setting' %}">アカウント管理</a></li>
+            <li class="breadcrumb-item active" aria-current="page">アカウント設定</li>
+        </ol>
+    </nav>
+
+    <div class="card border-0">
+        <h1 class="card-title fs-3 px-2 mt-2">
+            アカウント設定
+        </h1>
+
+        <div class="card-body overflow-x-scroll">
+            <div class="card-title fs-5">基本情報</div>
+            <table class="table table-hover table-bordered">
+                <tbody>
+                    <tr>
+                        <th class="bg-light">ユーザーID</th>
+                        <td>{{ request.user.username }}</td>
+                    </tr>
+
+                    <tr>
+                        <th class="bg-light">氏名</th>
+                        <td>
+                            {{ request.user.last_name }}&nbsp;{{ request.user.first_name }}
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th class="bg-light">Eメール</th>
+                        <td>{{ request.user.email|default:'-' }}</td>
+                    </tr>
+
+                    <tr>
+                        <th class="bg-light">最終ログイン時刻</th>
+                        <td>
+                            {% if request.user.last_login %}
+                            {{ request.user.last_login|date:"Y年n月j日 H時i分s秒" }}
+                            {% else %}
+                            -
+                            {% endif %}
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th class="bg-light">更新</th>
+                        <td>
+                                更新者ID：
+                                {% if request.user.updated_by == "custom_command" %}
+                                カスタムコマンド
+                                {% elif request.user.updated_by %}
+                                {{ request.user.updated_by }}
+                                {% else %}
+                                -
+                                {% endif %}
+
+                                <br>
+
+                                更新時刻：
+                                {{ request.user.updated_at|date:"Y年n月j日 H時i分s秒" }}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="card-body overflow-x-scroll">
+            <div class="card-title fs-5">パスワード</div>
+            <table class="table table-hover table-bordered">
+                <tbody>
+                    <tr>
+                        <th class="bg-light" style="width: 150px;">アクション</th>
+                        <td class="px-3">
+                            <form method="post">
+                                {% csrf_token %}
+                                <!-- パスワード -->
+                                <div class="my-1">
+                                    <label for="bf_new_password" class="form-label">新しいパスワード</label>
+                                    <input type="password" class="form-control prevent-forms-submit-enter" id="bf_new_password"
+                                        name="bf_new_password" minlength="8" maxlength="64" placeholder="新しいパスワード" style="max-width: 500px;" required>
+                                </div>
+                                <div class="my-1">
+                                    <label for="bf_new_password_confirm" class="form-label">新しいパスワード（確認証）</label>
+                                    <input type="password" class="form-control prevent-forms-submit-enter" id="bf_new_password_confirm"
+                                        name="bf_new_password_confirm" minlength="8" maxlength="64" placeholder="新しいパスワード（確認証）" style="max-width: 500px;" required>
+                                </div>
+                                <p class="text-secondary my-2">
+                                    ＊半角英数字８〜６４文字  指定記号必須「!, ?, (, ), @」
+                                </p>
+                                <button type="submit" class="btn btn-outline-primary text-nowrap mx-1 my-2 px-3"
+                                        name="button_action" value="change_password"
+                                        onclick="return window.confirm('パスワードを更新しますか？');"
+                                        >
+                                        更新する
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="card-body overflow-x-scroll">
+            <div class="card-title fs-5">二要素認証</div>
+            <table class="table table-hover table-bordered">
+                <tbody>
+                    <tr>
+                        <th class="bg-light" style="width: 150px;">ステータス</th>
+                        <td class="text-nowrap fs-4 px-3">
+                            {% if request.user.is_2fa_enabled %}
+                                <span class="badge bg-primary">有効</span>
+                            {% else %}
+                                <span class="badge bg-danger">無効</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th class="bg-light" style="width: 150px;">アクション</th>
+                        <td class="px-3">
+                            <form method="post">
+                                {% csrf_token %}
+                                {% if request.user.is_2fa_enabled %}
+                                    <button type="submit" class="btn btn-outline-danger text-nowrap mx-1 my-2 px-3"
+                                            name="button_action" value="disable_2fa"
+                                            onclick="return confirm('二要素認証を無効化しますか？');">
+                                            無効化する
+                                    </button>
+                                {% else %}
+                                    <div class="text-start my-2 overflow-x-auto">
+                                        <p>QRコードをスマートフォンの認証アプリで読み取ってください。</p>
+                                        <p>（Google Authenticator, Microsoft Authenticatorなど）</p>
+                                        <img src="data:image/png;base64, {{ qrcode_base64_str | safe }}"  
+                                            class="img-fluid img-thumbnail" alt="2FA QRコード" style="max-width: 150px;">
+                                    </div>
+                                    <!-- ワンタイムトークン -->
+                                    <div class="my-1">
+                                        <label for="bf_one_time_token" class="form-label">生成させたトークンを入力してください</label>
+                                        <input type="text" class="form-control prevent-forms-submit-enter" id="bf_one_time_token"
+                                            name="bf_one_time_token" placeholder="00000000" minlength="4" maxlength="24" style="max-width: 300px;" required>
+                                    </div>
+                                    <button type="submit" class="btn btn-outline-primary text-nowrap mx-1 my-2 px-3"
+                                            name="button_action" value="enable_2fa">
+                                            有効化する
+                                    </button>
+                                {% endif %}
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="card-body overflow-x-scroll"></div>
+    </div>
+</main>
+
+{% include 'partials/footer.html' %}
+
+{% endblock %}

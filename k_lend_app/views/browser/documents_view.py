@@ -18,6 +18,7 @@ logger = logging.getLogger(__name__)
 ドキュメントクラス
 """
 class DocumentView(LoginRequiredMixin, TemplateView):
+    CLASS_NAME = "ドキュメントクラス"
 
     # テンプレート
     template_name = "k_lend_app/license.html"
@@ -26,7 +27,6 @@ class DocumentView(LoginRequiredMixin, TemplateView):
         """
         コンストラクタ
         """
-        self.CLASS_NAME = "ドキュメントクラス"
         # 共通パラメータ
         self.param = {
             "error" : "",

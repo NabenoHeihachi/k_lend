@@ -21,6 +21,7 @@ logger = logging.getLogger(__name__)
 
 
 class EquipmentFormView(LoginRequiredMixin, TemplateView):
+    CLASS_NAME = "機材フォームクラス（管理用）"
 
     # テンプレート
     template_name='k_lend_app/equipment_form.html'
@@ -29,7 +30,6 @@ class EquipmentFormView(LoginRequiredMixin, TemplateView):
         """
         コンストラクタ
         """
-        self.CLASS_NAME = "機材フォームクラス（管理用）"
         # 共通パラメータ
         self.param = {
             "form_val_dict" : {},

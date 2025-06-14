@@ -59,9 +59,11 @@
                                     ログアウト
                                 </a>
                             </li>
+                            <li><a class="dropdown-item" href="{% url 'k_lend_app:account_setting' %}">アカウント設定</a></li>
+                            {% if request.user.type_code == "0" %}
                             <li><a class="dropdown-item" href="{% url 'k_lend_app:account_list' %}">アカウント一覧</a></li>
                             <li><a class="dropdown-item" href="{% url 'k_lend_app:account_create' %}">アカウント作成</a></li> 
-                            <li><a class="dropdown-item" href="{% url 'k_lend_app:account_2fa' %}">二要素認証設定</a></li>
+                            {% endif %}
                         </ul>
                     </li>
 

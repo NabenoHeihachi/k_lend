@@ -24,6 +24,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 class RecordListView(LoginRequiredMixin, TemplateView):
+    CLASS_NAME = "貸出記録一覧クラス"
 
     # テンプレートファイル
     template_name='k_lend_app/record_list.html'
@@ -32,7 +33,6 @@ class RecordListView(LoginRequiredMixin, TemplateView):
         """
         コンストラクタ
         """
-        self.CLASS_NAME = "貸出記録一覧クラス"
         # 共通パラメータ
         self.param = {
             "record_objects": [], 
@@ -221,7 +221,7 @@ class RecordListView(LoginRequiredMixin, TemplateView):
             # ==============================
             # ボタンアクションに該当がない場合
             # ==============================
-            messages.error(request, COMMON_MESSAGE_DICT["BROWSER"]["INVALIDF_REQUEST"])
+            messages.error(request, COMMON_MESSAGE_DICT["BROWSER"]["INVALID_REQUEST"])
             return redirect('k_lend_app:record_list')
         
         # ================

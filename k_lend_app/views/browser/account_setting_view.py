@@ -1,11 +1,13 @@
 # =================================
-# アカウント二要素認証設定クラス（管理用）
+# アカウント設定クラス（管理用）
 # =================================
 from django.contrib import messages
 from django.shortcuts import redirect, render
 from django.views.generic import TemplateView
 from k_lend_app.common.message_dict import COMMON_MESSAGE_DICT
 from django.http import HttpResponseServerError
+# フォームバリデーションクラス
+from k_lend_app.common.validation_function import FormValidationFuncs
 # セキュリティ関連
 from k_lend_app.common.access_function import restrict_page_access_by_type_code
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -19,16 +21,16 @@ import logging
 # ロガーの設定
 logger = logging.getLogger(__name__)
 
-class Account2FASettingView(LoginRequiredMixin, TemplateView):
+class AccountSettingView(LoginRequiredMixin, TemplateView):
+    CLASS_NAME = "アカウント証設定クラス（管理用）"
 
     # テンプレートファイル
-    template_name = 'k_lend_app/account_2fa.html'
+    template_name = 'k_lend_app/account_setting.html'
 
     def __init__(self):
         """
         コンストラクタ
         """
-        self.CLASS_NAME = "アカウント二要素認証設定クラス（管理用）"
         self.param = {
             "account": None,  # アカウントデータ
             "qrcode_base64_str": None,  # QRコード画像
@@ -107,17 +109,40 @@ class Account2FASettingView(LoginRequiredMixin, TemplateView):
             # -------------------
             button_action = request.POST.get('button_action', '')
             bf_one_time_token = request.POST.get('bf_one_time_token', '')
+            bf_new_password = request.POST.get('bf_new_password', '')
+            bf_new_password_confirm = request.POST.get('bf_new_password_confirm', '')
 
             # --------------------
             # データチェック
             # --------------------
             # ボタンアクションのチェック
-            if button_action not in ["enable_2fa", "disable_2fa"]:
+            if button_action not in ["change_password", "enable_2fa", "disable_2fa"]:
                 # メッセージ出力
-                messages.error(request, COMMON_MESSAGE_DICT["BROWSER"]["INVALIDF_REQUEST"])
+                messages.error(request, COMMON_MESSAGE_DICT["BROWSER"]["INVALID_REQUEST"])
                 # リダイレクト
-                return redirect("k_lend_app:account_2fa")
+                return redirect("k_lend_app:account_setting")
             
+            # ------------------------
+            # パスワード更新の場合
+            # ------------------------
+            if button_action == "change_password":
+                # パスワードバリデーション
+                if not FormValidationFuncs.is_match(bf_new_password, "password"):
+                    # メッセージ表示
+                    messages.error(request, COMMON_MESSAGE_DICT["VALIDATION"]["RE_PASSWORD"])
+                    return redirect("k_lend_app:account_setting")
+                # パスワードの一致チェック
+                if bf_new_password != bf_new_password_confirm:
+                    # メッセージ表示
+                    messages.error(request, COMMON_MESSAGE_DICT["VALIDATION"]["PASSWORD_CONFIRM"])
+                    return redirect("k_lend_app:account_setting")
+
+                # パスワードの更新処理
+                request.user.set_password(bf_new_password)
+                request.user.save(update_fields=["password"])
+                messages.success(request, COMMON_MESSAGE_DICT["DB"]["SAVE_SUCCESS"].format("新しいパスワード"))
+                return redirect("k_lend_app:account_setting")
+
             # ------------------------
             # 二要素認証の有効化する場合
             # ------------------------
@@ -134,7 +159,7 @@ class Account2FASettingView(LoginRequiredMixin, TemplateView):
                     # メッセージ出力
                     messages.error(request, COMMON_MESSAGE_DICT["VALIDATION"]["INVALID_ONE_TIME_PASSWORD"])
                     # リダイレクト
-                    return redirect("k_lend_app:account_2fa")
+                    return redirect("k_lend_app:account_setting")
 
                 try:
                     # 二要素認証を有効にする
@@ -162,7 +187,7 @@ class Account2FASettingView(LoginRequiredMixin, TemplateView):
                     messages.error(request, COMMON_MESSAGE_DICT["DB"]["SAVE_ERROR"].format("二要素認証の無効化"))
 
             # リダイレクト
-            return redirect("k_lend_app:account_2fa")
+            return redirect("k_lend_app:account_setting")
         
         # ================
         # 例外処理:END

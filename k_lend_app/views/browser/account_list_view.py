@@ -22,6 +22,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 class AccountListView(LoginRequiredMixin, TemplateView):
+    CLASS_NAME = "アカウント一覧クラス（管理用）"
 
     # テンプレートファイル
     template_name='k_lend_app/account_list.html'
@@ -30,7 +31,6 @@ class AccountListView(LoginRequiredMixin, TemplateView):
         """
         コンストラクタ
         """
-        self.CLASS_NAME = "アカウント一覧クラス（管理用）"
         # 共通パラメータ
         self.param = {
             "account_dataset": [],  # アカウント一覧
@@ -45,7 +45,7 @@ class AccountListView(LoginRequiredMixin, TemplateView):
         # 例外処理:START
         # ================
         # アクセス権限チェック
-        restrict_page_access_by_type_code(request, "職員")
+        restrict_page_access_by_type_code(request, "システム管理")
         try:
             # ログ出力
             logger.info(COMMON_MESSAGE_DICT["LOG"]["VIEW_GET"].format(self.CLASS_NAME))
@@ -96,7 +96,7 @@ class AccountListView(LoginRequiredMixin, TemplateView):
         # 例外処理:START
         # ================
         # アクセス権限チェック
-        restrict_page_access_by_type_code(request, "職員")
+        restrict_page_access_by_type_code(request, "システム管理")
         try:
             # ログ出力
             logger.info(COMMON_MESSAGE_DICT["LOG"]["VIEW_POST"].format(self.CLASS_NAME))
@@ -185,7 +185,7 @@ class AccountListView(LoginRequiredMixin, TemplateView):
             # ==============================
             # ボタンアクションに該当がない場合
             # ==============================
-            messages.error(request, COMMON_MESSAGE_DICT["BROWSER"]["INVALIDF_REQUEST"])
+            messages.error(request, COMMON_MESSAGE_DICT["BROWSER"]["INVALID_REQUEST"])
             return redirect('k_lend_app:account_list')
         
         # ================

@@ -35,6 +35,7 @@ logger = logging.getLogger(__name__)
 
 
 class RecordDownloadView(LoginRequiredMixin, TemplateView):
+    CLASS_NAME = "貸出記録ダウンロードクラス"
 
     # テンプレート
     template_name='k_lend_app/record_download.html'
@@ -43,7 +44,6 @@ class RecordDownloadView(LoginRequiredMixin, TemplateView):
         """
         コンストラクタ
         """
-        self.CLASS_NAME = "貸出記録ダウンロードクラス"
         # 共通パラメータ
         self.param = {
             "form_val_dict": {

@@ -25,6 +25,7 @@ logger = logging.getLogger(__name__)
 
 
 class RecordFormView(LoginRequiredMixin, TemplateView):
+    CLASS_NAME = "貸出記録フォームクラス"
 
     # テンプレート
     template_name='k_lend_app/record_form.html'
@@ -33,7 +34,6 @@ class RecordFormView(LoginRequiredMixin, TemplateView):
         """
         コンストラクタ
         """
-        self.CLASS_NAME = "貸出記録フォームクラス"
         # 共通パラメータ
         self.param = {
             "form_val_dict" : {},
